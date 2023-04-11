@@ -1,0 +1,26 @@
+{
+    "name": "chs/messages",
+    "description": "A test repo for exploring message queues",
+    "type": "project",
+    "require": {
+        "symfony/console": "^6.2",
+        "symfony/finder": "^6.2",
+        "monolog/monolog": "^3.3",
+        "php-amqplib/php-amqplib": "^3.5"
+    },
+    "require-dev": {
+        "fakerphp/faker": "^1.21"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Chs\\Messages\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Ryan W. Howe",
+            "email": "rhowe@kelleyryan.com"
+        }
+    ]
+}
