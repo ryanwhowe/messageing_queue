@@ -1,0 +1,14 @@
+version: "3.7"
+
+services:
+  php:
+    build:
+      context: ../images
+      dockerfile: message_php.Dockerfile
+    volumes:
+      - ../../logs/:/tmp/logs/
+
+  rabbit:
+    image: rabbitmq:3-management
+    ports:
+      - "15672:15672"

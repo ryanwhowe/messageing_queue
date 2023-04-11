@@ -1,4 +1,4 @@
-FROM php:8.0-fpm-buster
+FROM php:8.1-fpm-buster
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
@@ -30,8 +30,6 @@ RUN yes | pecl install xdebug \
 RUN pecl install apcu && docker-php-ext-enable apcu \
     && echo "apc.enable_cli=1" >> /usr/local/etc/php/php.ini \
     && echo "apc.enable=1" >> /usr/local/etc/php/php.ini
-
-RUN curl -sS https://get.symfony.com/cli/installer | bash && mv /root/.symfony/bin/symfony /usr/local/bin/symfony
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 ENV COMPOSER_MEMORY_LIMIT=-1
