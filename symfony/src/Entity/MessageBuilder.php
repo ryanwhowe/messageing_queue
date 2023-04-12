@@ -20,7 +20,8 @@ class MessageBuilder {
         return new Message(
             0,
             $self->faker->municipalityCode(),
-            $self->faker->bs()
+            $self->faker->bs(),
+            $self->faker->system(),
         );
     }
 
