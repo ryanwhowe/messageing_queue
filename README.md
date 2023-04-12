@@ -2,7 +2,7 @@
 This is a small testing application for a prof of concept for utilizing message queues for transfering information 
 to remote servers
 
-## Inital Setup
+## Initial Setup
 
 ### Requirements
 * Docker
@@ -47,7 +47,8 @@ composer install
 ### Accessing the RabbitMQ Management area
 
 The RabbitMQ management console takes a few minutes to come up and be ready to access from the time the solution is 
-brought up.  It is accessible from http://localhost:15672
+brought up.  It is accessible from http://localhost:15672 you can access the console using username: `guest` and 
+password `guest`
 
 ## Running Commands
 There are two commands that are part of the solution, both are only demonstration scripts on loading data into the 

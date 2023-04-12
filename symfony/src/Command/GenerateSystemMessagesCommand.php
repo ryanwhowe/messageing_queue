@@ -39,7 +39,9 @@ class GenerateSystemMessagesCommand extends Command {
             Dot::set($counts, $message->getSystem(), Dot::get($counts,$message->getSystem(),0, '~') + 1, '~');
         }
 
-        var_export($counts);
+        $report = [];
+        foreach($counts as $muni => $count) $report[] = [$muni, $count];
+        $this->io->table(['System', 'Count'], $report);
 
         $connection = new AMQPStreamConnection('rabbit', 5672, 'guest', 'guest');
         $channel = $connection->channel();

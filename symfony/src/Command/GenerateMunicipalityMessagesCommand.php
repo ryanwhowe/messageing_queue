@@ -39,7 +39,10 @@ class GenerateMunicipalityMessagesCommand extends Command {
             Dot::set($counts, $message->getMunicipality(), Dot::get($counts,$message->getMunicipality(),0, '~') + 1, '~');
         }
 
-        var_export($counts);
+        $report = [];
+        foreach($counts as $muni => $count) $report[] = [$muni, $count];
+
+        $this->io->table(['Municipality', 'Count'], $report);
 
         $connection = new AMQPStreamConnection('rabbit', 5672, 'guest', 'guest');
         $channel = $connection->channel();
