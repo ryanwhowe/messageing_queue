@@ -40,7 +40,7 @@ class GenerateSystemMessagesCommand extends Command {
         }
 
         $report = [];
-        foreach($counts as $muni => $count) $report[] = [$muni, $count];
+        foreach($counts as $system => $count) $report[] = [$system, $count];
         $this->io->table(['System', 'Count'], $report);
 
         $connection = new AMQPStreamConnection('rabbit', 5672, 'guest', 'guest');
