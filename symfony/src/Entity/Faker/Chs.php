@@ -24,8 +24,6 @@ class Chs extends Base {
         'chelsea.ma.us',
         'chilmark.ma.us',
         'clinton.ma.us',
-        'demo.ma.us',
-        'dev.ma.us',
         'dighton.ma.us',
         'dracut.ma.us',
         'duxbury.ma.us',
