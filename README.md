@@ -1,80 +1,72 @@
-# symfony-template
-This is a template for a docker based development of a symfony based application with nginx.
+# messaging_queue
+This is a small testing application for a prof of concept for utilizing message queues for transfering information 
+to remote servers
 
-___Uses:___ 
-* php 8.0
-* nginx 1.9.15
+## Inital Setup
 
-## Templates
-There are two issue templates for GitHub included in the repo.  These can prompt the reporters to generate good issues.
-In addition, there is a Pull Request Template to help keep the communication focus on the PR to help create quality pull
-requests.  These templates should be updated and expanded upon to meet your project's needs.
+### Requirements
+* Docker
 
-### Bug Report
-Bug reports that stress reproduction steps, expected behavior and screenshots
+### Configure the Override File for your local environment
+Once the solution has been cloned from the source repo you will need to set up some of the overrides to allow the 
+docker containers to access the solution code.
 
-### Feature Request
-Feature requests that keep the focus on the problem that needs to be resolved over how the reported feels it should be
-solved with prompts for additional information
-
-## Setup docker environment
-Assuming that you have already installed docker on your local machine.  You will need the full path to the solution
-folder.  Once the solution is cloned you will need to copy the `devops/dev/docker-compose.override.yml.example` to
-`devops/dev/docker-compose.override.yml`.  Every place that that has `<path to solution>` will need to be replaced with
-the fully qualified path to the base folder of the solution, should be a folder path ending in the name of your repository unless you cloned
-the repo to a custom folder name.  The project `.gitignore` will not allow this file to be committed to the repo as it is
-dependent on the local environment
-
-From the project root
 ```shell
-cp devops/dev/docker-compose.override.yml.example devops/dev/docker-compose.override.yml
+cd <solution directory>/devops/message_dev/
+
+cp docker-compose.override.yml.example docker-compose.override.yml
 ```
 
-### Run the docker solution
-The first time that this solution is run it will need to build the project containers and download the base containers
-used in the project.  This initial build can take some time, grab a coffee after executing the up command for the first
-time.
+edit the `docker-compose.override.yml` file, replace the `<path to solution>` with the path to your solution.  If 
+you are running this from inside windows, then docker runs through the 
+[WSL](https://learn.microsoft.com/en-us/windows/wsl/about) the path used to access the `C:\` drive is `/mnt/c/` you 
+should not check out the solution into you Documents folder, this is a special folder for windows that contains a lot 
+of virtual links and is often an issue for Docker to access it.
 
-From the project root directory
+Once you have edited the file, bring up the solution (run from the solutions `message_dev` directory).  The first time it is ran Docker will build the `php` 
+container and pull the base images that the solution needs, this could take several minutes to start the first time.
+
 ```shell
-cd devops/dev
 docker-compose up -d
 ```
 
-### command line access to php container
-From the `devops/dev` directory
+### Install the Solution Assets
+
+Enter the `php` container's shell (run from the solutions `message_dev` directory)
+
 ```shell
 docker-compose exec php bash
 ```
 
-## Installing Symfony
-The symfony directory is empty.  The included `php.Dockerfile` is build off the official php8.0:fpm-buster image.  The
-resulting image contains both composer and the symfony cli installer already installed in the image.
+From inside the `php` container.  Run the composer install to pull in the assets
 
-Access the running php container's command line as described in the previous section to perform the installation of 
-symfony. This will ensure that symfony is installed in the container's php version.  Once the installation is complete 
-you can also install any other packages your project will require using `composer`.
+```shell
+composer install
+```
 
-You can follow the official Symfony [Documentation](https://symfony.com/doc/current/index.html) to install the symfony
-base solution that suits your needs.
+### Accessing the RabbitMQ Management area
 
-__Warning:__ the symfony installer will create a new git environment inside the `symfony` directory.  Be sure to remove
-the `.git` directory from inside the `symfony` directory.
+The RabbitMQ management console takes a few minutes to come up and be ready to access from the time the solution is 
+brought up.  It is accessible from http://localhost:15672
 
-## Accessing the solution via http
-The included `nginx.Dockerfile` will make the symfony solution available from your local environment on port 8081.
-Navigate you web browser to http://localhost:8081 to view the solution.
+## Running Commands
+There are two commands that are part of the solution, both are only demonstration scripts on loading data into the 
+RabbitMQ queues.  These commands can be access either by entering the `php` container's shell or directly by 
+executing them through `docker-compose`.
 
-If you are creating a cli application that does not utilize a web interface you can remove the `images/nginx` directory, 
-`nginx.Dockerfile` and `/logs` directory from the solution along with the accompanying settings in the 
-`docker-compose.yml`, `docker-compose.override.yml.example` and your `docker-compose.override.yml` files.
+### Shell access
+(run from the solutions `message_dev` directory)
+```shell
+docker-compose exec php bash
 
-## logs
-The nginx server will log to the solutions `/logs/nginx` directory
+./console <command>
+```
 
-## Template Usage
-Please update this README file to suit the needs of your project, I only ask that you please reference the template
-project if you base a solution off it.  If possible please keep below this line when you use this template for your project
+### Docker direct access
+(run from the solutions `message_dev` directory)
+```shell
+docker-compose exec php ./console <command>
+```
 
 ---
 <dl>
