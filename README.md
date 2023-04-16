@@ -1,6 +1,8 @@
 # messaging_queue
 This is a small testing application for a prof of concept for utilizing message queues for transfering information 
-to remote servers
+to remote servers.
+
+[RabbitMQ tutorials](https://www.rabbitmq.com/getstarted.html)
 
 ## Initial Setup
 
