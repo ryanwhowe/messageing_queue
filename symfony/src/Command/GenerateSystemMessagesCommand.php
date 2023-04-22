@@ -23,6 +23,13 @@ class GenerateSystemMessagesCommand extends Command {
     protected static $defaultName = 'queue:generate-system-messages';
     protected static $defaultDescription = 'Generate test messages to the transaction exchange and separate by systems';
 
+    protected function configure() {
+        $this
+            ->addOption('messsage_count', 'm', InputOption::VALUE_OPTIONAL, 'The number of messages to generate', 1000)
+            ->addOption('muni_count', 'c', InputOption::VALUE_OPTIONAL, 'Limit the amount of municipalities created', 119)
+            ->addOption('slow', 's', InputOption::VALUE_NONE, 'Slowly insert the generated messages');
+
+    }
     protected function execute(InputInterface $input, OutputInterface $output) {
 
         $exchange_name = 'transaction';
@@ -30,14 +37,18 @@ class GenerateSystemMessagesCommand extends Command {
         $this->io = new SymfonyStyle($input, $output);
         $this->logger = Logger::getLog();
 
+        $message_count = (int) $input->getOption('message_count');
+        $muni_count = (int) $input->getOption('muni_count');
+        $slow = (bool) $input->getOption('slow');
+
         $this->log(Level::Info, self::$defaultName . ' started', $input->getOptions());
 
-        $this->logger->debug('Creating 1000 messages');
+        $this->logger->debug('Creating ' . $message_count . ' messages');
 
         /**
-         * Create 1000 messages with either egov or k2 as a destination system
+         * Create messages with either egov or k2 as a destination system
          */
-        $messages = MessageBuilder::createMany(1000);
+        $messages = MessageBuilder::createMany($message_count, $muni_count);
         $counts = [];
         /** @var Message $message */
         foreach ($messages as $message) {
@@ -69,8 +80,8 @@ class GenerateSystemMessagesCommand extends Command {
 
         /* declaring the queues and bindings each run ensure that they exist, if they already do nothing is done */
         foreach ($counts as $system => $count) {
-            $channel->queue_declare($system . '_transaction', false, true, false, false);
-            $channel->queue_bind($system . '_transaction', $exchange_name, $system);
+            $channel->queue_declare($system . '_transactions', false, true, false, false);
+            $channel->queue_bind($system . '_transactions', $exchange_name, $system);
         }
 
         /* loop through all the messages and send them to the single exchange to be routed the the correct queue */
@@ -78,7 +89,10 @@ class GenerateSystemMessagesCommand extends Command {
         foreach ($messages as $message) {
             $msg = new AMQPMessage($message->jsonSerialize());
             $channel->basic_publish($msg, $exchange_name, $message->getSystem());
+            if ($slow) usleep(random_int(250000, 500000));
+            echo '.';
         }
+        echo PHP_EOL;
 
         /**
          * Clean up the connections
