@@ -25,7 +25,7 @@ class GenerateSystemMessagesCommand extends Command {
 
     protected function configure() {
         $this
-            ->addOption('messsage_count', 'm', InputOption::VALUE_OPTIONAL, 'The number of messages to generate', 1000)
+            ->addOption('message_count', 'm', InputOption::VALUE_OPTIONAL, 'The number of messages to generate', 1000)
             ->addOption('muni_count', 'c', InputOption::VALUE_OPTIONAL, 'Limit the amount of municipalities created', 119)
             ->addOption('slow', 's', InputOption::VALUE_NONE, 'Slowly insert the generated messages');
 
